@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# credentials
+amazon_curl.sh
+email.json
+
+.vscode/settings.json
 .ipynb_checkpoints
 
 # Distribution / packaging
