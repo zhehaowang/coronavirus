@@ -77,7 +77,7 @@ class AmazonRefresh:
                 time = datetime.datetime.strptime(timestr, "%Y-%m-%dT%H:%M:%S.%f")
                 if status == "found" or status == "sorry":
                     # 2 hours interval
-                    return (datetime.datetime.now() - time).total_seconds() < 3600 * 2
+                    return (datetime.datetime.now() - time).total_seconds() > 3600 * 2
         return True
 
     def record_status(self, status):
@@ -108,6 +108,9 @@ class AmazonRefresh:
                     "Something is no longer available :(\n\nSigh,\nBot",
                 )
                 self.record_status("sorry")
+            elif "recommended for you" in stdout.lower():
+                print("Session expired")
+                self.record_status("expired")
             else:
                 self.notify(
                     "Amazon Refresh: found availability",
