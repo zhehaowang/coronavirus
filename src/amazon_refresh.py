@@ -68,12 +68,18 @@ class AmazonRefresh:
         print(stderr)
 
         if stdout.count(target) != target_num:
-            self.notify(
-                "Amazon Refresh: found availability",
-                "Go check out {} \n\nEnjoy,\nBot".format(
-                    "https://www.amazon.com/gp/buy/shipoptionselect/handlers/display.html?hasWorkingJavascript=1"
-                ),
-            )
+            if "sorry" in stdout.lower():
+                self.notify(
+                    "Amazon Refresh: adjust item",
+                    "Something is no longer available :(\n\nSigh,\nBot",
+                )
+            else:
+                self.notify(
+                    "Amazon Refresh: found availability",
+                    "Go check out {} \n\nEnjoy,\nBot".format(
+                        "https://www.amazon.com/gp/buy/shipoptionselect/handlers/display.html?hasWorkingJavascript=1"
+                    ),
+                )
         else:
             print("occurrences {} == {}".format(target, target_num))
         return
