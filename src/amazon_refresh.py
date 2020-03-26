@@ -7,6 +7,7 @@ import json
 import os
 import datetime
 
+
 def parse_args():
     parser = argparse.ArgumentParser(
         """
@@ -72,7 +73,7 @@ class AmazonRefresh:
         with open(self.log, "r") as logfile:
             lines = logfile.readlines()
             if len(lines) > 0:
-                timestr, status = lines[-1].split(',')
+                timestr, status = lines[-1].split(",")
                 time = datetime.datetime.strptime(timestr, "%Y-%m-%dT%H:%M:%S.%f")
                 if status == "found" or status == "sorry":
                     # 2 hours interval
