@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# logs
+amazon_refresh.log
+
 # credentials
 amazon_curl.sh
 email.json
