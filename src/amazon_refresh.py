@@ -73,11 +73,11 @@ class AmazonRefresh:
         with open(self.log, "r") as logfile:
             lines = logfile.readlines()
             if len(lines) > 0:
-                timestr, status = lines[-1].split(",")
+                timestr, status = lines[-1].strip().split(",")
                 time = datetime.datetime.strptime(timestr, "%Y-%m-%dT%H:%M:%S.%f")
                 if status == "found" or status == "sorry":
                     # 2 hours interval
-                    return (datetime.datetime.now() - time).total_seconds() < 3600 * 2
+                    return (datetime.datetime.now() - time).total_seconds() > 3600 * 2
         return True
 
     def record_status(self, status):
