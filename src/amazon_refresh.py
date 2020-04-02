@@ -101,15 +101,21 @@ class AmazonRefresh:
         stderr = stderr.decode("utf-8")
         print(stderr)
 
-        if stdout.count(target) != target_num:
+        target_count = stdout.count(target)
+        if target_count != target_num:
             if "sorry" in stdout.lower():
                 self.notify(
                     "Amazon Refresh: adjust item",
                     "Something is no longer available :(\n\nSigh,\nBot",
                 )
                 self.record_status("sorry")
-            elif "recommended for you" in stdout.lower():
-                print("Session expired")
+            elif "recommended for you" in stdout.lower() or target_count == 0:
+                self.notify(
+                    "Amazon Refresh: session expired",
+                    "Try {} \n\nSigh,\nBot".format(
+                        "https://www.amazon.com/gp/buy/shipoptionselect/handlers/display.html?hasWorkingJavascript=1"
+                    ),
+                )
                 self.record_status("expired")
             else:
                 self.notify(
