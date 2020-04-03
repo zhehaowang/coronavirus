@@ -75,9 +75,13 @@ class AmazonRefresh:
             if len(lines) > 0:
                 timestr, status = lines[-1].strip().split(",")
                 time = datetime.datetime.strptime(timestr, "%Y-%m-%dT%H:%M:%S.%f")
-                if status == "found" or status == "sorry":
+                if status == "found":
                     # 2 hours interval
                     return (datetime.datetime.now() - time).total_seconds() > 3600 * 2
+                elif status == "expired":
+                    ret = os.path.getmtime(self.curl_file) > (time - datetime.timedelta(seconds=60)).timestamp()
+                    print("token expired, curl_file modified recently {}".format(ret))
+                    return ret
         return True
 
     def record_status(self, status):
