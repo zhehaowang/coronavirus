@@ -85,8 +85,10 @@ class MVCGetter:
         if not location_data:
             print("location data not loaded!")
 
+        # Join time_data with location_data
         for t in time_data:
             for l in location_data:
+                # note that LocationId definition is not per-location, but per-location-per-get-type
                 if t["LocationId"] == l["Id"]:
                     t.update(l)
                     break
@@ -100,6 +102,7 @@ class MVCGetter:
                 availability.append({
                     "first": t["FirstOpenSlot"],
                     "name": t["Name"],
+                    "id": str(t["LocationId"]),
                 })
         
         return availability
@@ -107,7 +110,8 @@ class MVCGetter:
     def notify(self, avails):
         notify_str = ""
         for a in avails:
-            notify_str += a["name"] + " " + a["first"].replace(" <br/> ", " ") + "\n"
+            url_str = self.url + "/" + a["id"]
+            notify_str += f"{a['name']} {a['first'].replace(' <br/> ', ' ')}. Url: {url_str}\n"
         
         if len(self.recipient) > 0:
             msg = MIMEText(f"Hi,\n\nWe found NJ DMV availability for {self.requested}:\n{notify_str}\nCheers,\nBot")
