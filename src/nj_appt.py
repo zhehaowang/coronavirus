@@ -110,7 +110,7 @@ class MVCGetter:
             notify_str += a["name"] + " " + a["first"].replace(" <br/> ", " ") + "\n"
         
         if len(self.recipient) > 0:
-            msg = MIMEText(f"Hi,\nWe found NJ DMV availability for {self.requested}:\n{notify_str}\nCheers,\nBot")
+            msg = MIMEText(f"Hi,\n\nWe found NJ DMV availability for {self.requested}:\n{notify_str}\nCheers,\nBot")
             msg["From"] = "testname.zhehao@gmail.com"
             msg["To"] = ",".join(self.recipient)
             msg["Subject"] = f"DMV availability found {self.requested}"
@@ -127,3 +127,6 @@ if __name__ == "__main__":
     avails = getter.get()
     if (avails):
         getter.notify(avails)
+        print(f"found availability {avails}, notified")
+    else:
+        print("availability not found")
