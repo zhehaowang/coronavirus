@@ -16,7 +16,7 @@ def parse_args():
         If found anything, send an email. (assuming sendmail in local system is set up.)
 
         example usage:
-            ./nj_appt.py --get nondriverid --only pater --email ""
+            ./nj_appt.py --get nondriverid --only pater --email "" --latest 14
     """
     )
     parser.add_argument(
@@ -40,6 +40,7 @@ class MVCGetter:
         url_map = {
             "initial": "https://telegov.njportal.com/njmvc/AppointmentWizard/15",
             "nondriverid": "https://telegov.njportal.com/njmvc/AppointmentWizard/16",
+            "knowledge": "https://telegov.njportal.com/njmvc/AppointmentWizard/17",
         }
         self.recipient = [] if not args.email else args.email.split(",")
         self.only = args.only.split(",")
