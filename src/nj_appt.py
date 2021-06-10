@@ -6,6 +6,7 @@ import smtplib
 import json
 import os
 import datetime
+import re
 from email.mime.text import MIMEText
 
 def parse_args():
@@ -15,7 +16,7 @@ def parse_args():
         If found anything, send an email. (assuming sendmail in local system is set up.)
 
         example usage:
-            ./nj_appt.py --get nondriverid --only pater --emails ""
+            ./nj_appt.py --get nondriverid --only pater --email ""
     """
     )
     parser.add_argument(
@@ -26,6 +27,9 @@ def parse_args():
     )
     parser.add_argument(
         "--only", help="only alert when certain offices have availability", default="",
+    )
+    parser.add_argument(
+        "--latest", help="alert only if the earliest appointment is no later than specified days from now", default=9999, type=int,
     )
     args = parser.parse_args()
     return args
@@ -41,6 +45,7 @@ class MVCGetter:
         self.only = args.only.split(",")
         self.url = url_map[args.get]
         self.requested = args.get
+        self.latest = args.latest
         return
 
     def get(self):
@@ -99,11 +104,17 @@ class MVCGetter:
                 continue
             matched = not self.only or any([o in t["Name"].lower() for o in self.only])
             if matched:
-                availability.append({
-                    "first": t["FirstOpenSlot"],
-                    "name": t["Name"],
-                    "id": str(t["LocationId"]),
-                })
+                matched = re.match(r".*<br/> Next Available: ([^ ]+) .*", t["FirstOpenSlot"])
+                if not matched:
+                    print(f"unexpected FirstOpenSlot format: {t['FirstOpenSlot']}")
+                    continue
+                earliest_date = datetime.datetime.strptime(matched.group(1), '%m/%d/%Y')
+                if (earliest_date - datetime.datetime.now()).days <= self.latest:
+                    availability.append({
+                        "first": t["FirstOpenSlot"],
+                        "name": t["Name"],
+                        "id": str(t["LocationId"]),
+                    })
         
         return availability
 
