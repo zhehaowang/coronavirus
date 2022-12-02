@@ -41,6 +41,7 @@ class MVCGetter:
             "initial": "https://telegov.njportal.com/njmvc/AppointmentWizard/15",
             "nondriverid": "https://telegov.njportal.com/njmvc/AppointmentWizard/16",
             "knowledge": "https://telegov.njportal.com/njmvc/AppointmentWizard/17",
+            "roadtest": "https://telegov.njportal.com/njmvc/AppointmentWizard/252",
         }
         self.recipient = [] if not args.email else args.email.split(",")
         self.only = args.only.split(",")
